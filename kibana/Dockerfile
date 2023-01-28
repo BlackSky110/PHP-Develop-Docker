@@ -1,0 +1,5 @@
+ARG ELK_VER
+FROM kibana:${ELK_VER}
+LABEL author="0x49"
+LABEL email="1458513@qq.com"
+EXPOSE 5601

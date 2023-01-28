@@ -1,0 +1,149 @@
+version: '3.5'
+
+networks:
+  develop:
+
+
+services:
+
+  elasticsearch:
+    build:
+      context: ./elasticsearch
+      args:
+        - ELK_VER=${ELK_VERSION}
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - cluster.name=cc-docker-cluster
+      - node.name=cc-docker-node
+      - bootstrap.memory_lock=true
+      - http.cors.enabled=true
+      - http.cors.allow-origin="*"
+      # - xpack.security.transport.ssl.enabled=false
+      - xpack.security.enabled=true
+      - xpack.security.authc.api_key.enabled=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # - discovery.seed_hosts=
+      # - cluster.initial_master_nodes=cc-docker-node
+      - discovery.type=single-node
+    volumes:
+      - "./elasticsearch/data/${ELK_VERSION}:/usr/share/elasticsearch/data"
+      - "./logs/elasticsearch/${ELK_VERSION}:/usr/share/elasticsearch/logs"
+      - "./elasticsearch/plugins/${ELK_VERSION}:/usr/share/elasticsearch/plugins"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - develop
+    depends_on:
+      - redis
+
+  kibana:
+    build: 
+      context: ./kibana
+      args:
+        - ELK_VER=${ELK_VERSION}
+    container_name: kibana
+    ports:
+      - 5601:5601
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      - XPACK_GRAPH_ENABLED=true
+      - TIMELION_ENABLED=true
+    networks:
+      - develop
+    depends_on:
+      - elasticsearch
+
+  openresty:
+    build:
+      context: ./openresty
+      dockerfile: Dockerfile
+    container_name: openresty
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - "${WWWROOT_PATH}:/data/wwwroot"
+      - "./logs/wwwlogs:/data/wwwlogs"
+      - type: "bind"
+        source: ./openresty/config/conf
+        target: /usr/local/openresty/nginx/conf
+      - type: "bind"
+        source: ./openresty/config/vhost
+        target: /usr/local/openresty/nginx/conf/vhost
+      - type: "bind"
+        source: ./openresty/config/rewrite
+        target: /usr/local/openresty/nginx/conf/rewrite
+      - type: "bind"
+        source: ./logs/nginx
+        target: /usr/local/openresty/nginx/logs
+    networks:
+      - develop
+    depends_on:
+      - php73
+      - php81
+      - php82
+      - redis
+
+  redis:
+    build:
+      context: ./redis
+      dockerfile: redis.Dockerfile
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - develop
+  php73:
+    build:
+      context: ./php
+      dockerfile: php73.Dockerfile
+    container_name: php73
+    restart: always
+    volumes:
+      - "${WWWROOT_PATH}:/data/wwwroot"
+      - "./php/php73/etc:/usr/local/etc"
+    working_dir: /data/wwwroot/
+    #privileged: true
+    networks:
+      - develop
+    depends_on:
+      - elasticsearch
+      - redis
+  php81:
+    build:
+      context: ./php
+      dockerfile: php81.Dockerfile
+    container_name: php81
+    restart: always
+    volumes:
+      - "${WWWROOT_PATH}:/data/wwwroot"
+      - "./php/php81/etc:/usr/local/etc"
+    working_dir: /data/wwwroot/
+    networks:
+      - develop
+    depends_on:
+      - elasticsearch
+      - redis
+  php82:
+    build:
+      context: ./php
+      dockerfile: php82.Dockerfile
+    container_name: php82
+    restart: always
+    volumes:
+      - "${WWWROOT_PATH}:/data/wwwroot"
+      - "./php/php82/etc:/usr/local/etc"
+    working_dir: /data/wwwroot/
+    networks:
+      - develop
+    depends_on:
+      - elasticsearch
+      - redis
