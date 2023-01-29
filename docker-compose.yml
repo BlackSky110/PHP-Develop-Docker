@@ -89,7 +89,6 @@ services:
       - php73
       - php81
       - php82
-      - redis
 
   redis:
     build:
@@ -97,6 +96,11 @@ services:
       dockerfile: redis.Dockerfile
     container_name: redis
     restart: always
+    volumes:
+      - "./redis/redis.conf:/etc/redis/redis.conf"
+      - "./redis/data:/data/db"
+      - "./logs/redis:/data/logs"
+    command: ["redis-server","/etc/redis/redis.conf"]
     ports:
       - 6379:6379
     networks:

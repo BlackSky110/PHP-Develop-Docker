@@ -4,3 +4,4 @@ logs/
 openresty/config/vhost/*
 !openresty/config/vhost/default.conf
 openresty/config/ssl/
+redis/data
