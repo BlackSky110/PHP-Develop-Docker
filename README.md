@@ -1,10 +1,16 @@
 ### 介绍
     容器集成
     php 7.3,8.1,8.2
+    php composer
     redis 7,
     elasticsearch 7.17
     openresty 1.21
     kibana 7.17
+
+```
+php扩展
+bcmath|Core|ctype|curl|date|dom|exif|fileinfo|filter|ftp|gd|gettext|hash|iconv|intl|json|libxml|mbstring|mysqli|mysqlnd|openssl|pcntl|pcre|PDO|pdo_mysql|pdo_sqlite|Phar|posix|readline|redis|Reflection|session|shmop|SimpleXML|soap|sockets|sodium|SPL|sqlite3|standard|swoole|sysvmsg|sysvsem|sysvshm|tokenizer|xlswriter|xml|xmlreader|xmlwriter|zip|zlib
+```
     
 ### 修改.env
 > WWWROOT_PATH web所有项目目录
@@ -32,3 +38,5 @@
 - 代码文件夹(域名需要使用到文件夹名,注意命名规范)放置在${WWWROOT_PATH}映射目录内
 - openresty/config/vhost/default.conf laravel开发环境,如不需要去除配置中"include /usr/local/openresty/nginx/conf/rewrite/laravel.conf;"
 - 修改hosts 127.0.0.1 [代码文件夹名].develop.com
+
+
