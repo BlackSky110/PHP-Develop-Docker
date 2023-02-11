@@ -14,6 +14,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     && docker-php-ext-install -j$(nproc)  bcmath exif gettext intl pcntl shmop soap sockets sysvmsg sysvsem sysvshm zip pdo_mysql mysqli \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc) opcache \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && pecl install swoole \
