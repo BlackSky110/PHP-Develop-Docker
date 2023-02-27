@@ -2,12 +2,7 @@
 elasticsearch/data/
 mysql/5.7/data/
 mysql/8.0/data/
-logs/
-!logs/nginx
-!logs/mysql
-!logs/elasticsearch
-!logs/redis
-!logs/wwwlogs
+logs/*
 openresty/config/vhost/*
 !openresty/config/vhost/default.conf
 openresty/config/ssl/

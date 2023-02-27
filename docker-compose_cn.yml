@@ -1,5 +1,6 @@
 version: '3.5'
 
+
 networks:
   develop:
     ipam:
@@ -8,9 +9,7 @@ networks:
 
 services:
   mysql57:
-    build: 
-      context: ./mysql
-      dockerfile: 57.Dockerfile
+    image: ${IMAGE_BASE}/mysql:5.7.41
     container_name: mysql57
     restart: always
     environment:
@@ -34,10 +33,7 @@ services:
         ipv4_address: 172.16.1.9
 
   elasticsearch:
-    build:
-      context: ./elasticsearch
-      args:
-        - ELK_VER=${ELK_VERSION:-7.17.7}
+    image: ${IMAGE_BASE}/elasticsearch:${ELK_VERSION:-7.17.7}
     container_name: elasticsearch
     restart: always
     environment:
@@ -71,10 +67,7 @@ services:
       - redis
 
   kibana:
-    build: 
-      context: ./kibana
-      args:
-        - ELK_VER=${ELK_VERSION:-7.17.7}
+    image: ${IMAGE_BASE}/kibana:${ELK_VERSION:-7.17.7}
     container_name: kibana
     ports:
       - 5601:5601
@@ -90,9 +83,7 @@ services:
       - elasticsearch
 
   openresty:
-    build:
-      context: ./openresty
-      dockerfile: Dockerfile
+    image: ${IMAGE_BASE}/openresty:1.21.4.1
     container_name: openresty
     restart: always
     ports:
@@ -100,18 +91,10 @@ services:
     volumes:
       - "${WWWROOT_PATH}:/data/wwwroot"
       - "./logs/wwwlogs:/data/wwwlogs"
-      - type: "bind"
-        source: ./openresty/config/conf
-        target: /usr/local/openresty/nginx/conf
-      - type: "bind"
-        source: ./openresty/config/vhost
-        target: /usr/local/openresty/nginx/conf/vhost
-      - type: "bind"
-        source: ./openresty/config/rewrite
-        target: /usr/local/openresty/nginx/conf/rewrite
-      - type: "bind"
-        source: ./logs/nginx
-        target: /usr/local/openresty/nginx/logs
+      - "./logs/nginx:/usr/local/openresty/nginx/logs"
+      - "./openresty/config/conf:/usr/local/openresty/nginx/conf"
+      - "./openresty/config/vhost:/usr/local/openresty/nginx/conf/vhost"
+      - "./openresty/config/rewrite:/usr/local/openresty/nginx/conf/rewrite"
     networks:
         develop:
           ipv4_address: 172.16.1.2
@@ -121,9 +104,7 @@ services:
       - php82
 
   redis:
-    build:
-      context: ./redis
-      dockerfile: redis.Dockerfile
+    image: ${IMAGE_BASE}/redis:7.0.7
     container_name: redis
     restart: always
     volumes:
@@ -139,10 +120,7 @@ services:
     depends_on:
       - mysql57
   php73:
-    build:
-      context: ./php
-      dockerfile: php73.Dockerfile
-    image: registry.cn-hangzhou.aliyuncs.com/aix_chenc/php:7.3
+    image: ${IMAGE_BASE}/php:7.3
     container_name: php73
     restart: always
     volumes:
@@ -157,10 +135,7 @@ services:
       - elasticsearch
       - redis
   php81:
-    build:
-      context: ./php
-      dockerfile: php81.Dockerfile
-    image: registry.cn-hangzhou.aliyuncs.com/aix_chenc/php:8.1
+    image: ${IMAGE_BASE}/php:8.1
     container_name: php81
     restart: always
     volumes:
@@ -174,9 +149,7 @@ services:
       - elasticsearch
       - redis
   php82:
-    build:
-      context: ./php
-      dockerfile: php82.Dockerfile
+    image: ${IMAGE_BASE}/php:8.2
     container_name: php82
     restart: always
     volumes:

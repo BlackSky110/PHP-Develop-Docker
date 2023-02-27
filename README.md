@@ -40,3 +40,5 @@ bcmath|Core|ctype|curl|date|dom|exif|fileinfo|filter|ftp|gd|gettext|hash|iconv|i
 - 修改hosts 127.0.0.1 [代码文件夹名].develop.com
 
 
+1.多项目多php版本可选
+2.自动识别网站
