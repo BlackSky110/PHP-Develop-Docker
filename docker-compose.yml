@@ -142,7 +142,6 @@ services:
     build:
       context: ./php
       dockerfile: php73.Dockerfile
-    image: registry.cn-hangzhou.aliyuncs.com/aix_chenc/php:7.3
     container_name: php73
     restart: always
     volumes:
@@ -160,7 +159,6 @@ services:
     build:
       context: ./php
       dockerfile: php81.Dockerfile
-    image: registry.cn-hangzhou.aliyuncs.com/aix_chenc/php:8.1
     container_name: php81
     restart: always
     volumes:

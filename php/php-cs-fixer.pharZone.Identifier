@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/tag/v3.14.4
+HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/4344257/5cd2a38a-9b4b-4b5c-9c29-f3283d5c15d8?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20230216%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230216T082345Z&X-Amz-Expires=300&X-Amz-Signature=199351f4168e5b02fa14760de8b9880b6378b495719a739fdf07f0dd195a4055&X-Amz-SignedHeaders=host&actor_id=30659757&key_id=0&repo_id=4344257&response-content-disposition=attachment%3B%20filename%3Dphp-cs-fixer.phar&response-content-type=application%2Foctet-stream

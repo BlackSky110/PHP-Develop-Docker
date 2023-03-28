@@ -45,13 +45,12 @@ services:
       # - xpack.security.transport.ssl.enabled=false
       - xpack.security.enabled=true
       - xpack.security.authc.api_key.enabled=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx1024m"
       # - discovery.seed_hosts=
       # - cluster.initial_master_nodes=cc-docker-node
       - discovery.type=single-node
     volumes:
-      - "./elasticsearch/data/${ELK_VERSION:-7.17.7}:/usr/share/elasticsearch/data"
-      - "./logs/elasticsearch/${ELK_VERSION:-7.17.7}:/usr/share/elasticsearch/logs"
+      - "./elasticsearch/data/${ELK_VERSION:-7.17.7}:/usr/share/elasticsearch/data:rw"
       - "./elasticsearch/plugins/${ELK_VERSION:-7.17.7}:/usr/share/elasticsearch/plugins"
     ulimits:
       memlock:
@@ -124,7 +123,7 @@ services:
     container_name: php73
     restart: always
     volumes:
-      - "${WWWROOT_PATH}:/data/wwwroot"
+      - "${WWWROOT_PATH}:/data/wwwroot:rw"
       - "./php/php73/etc:/usr/local/etc"
     working_dir: /data/wwwroot/
     #privileged: true

@@ -1,3 +1,4 @@
+FROM surnet/alpine-wkhtmltopdf:3.17.0-0.12.6-full as wkhtmltopdf
 FROM php:8.2.1-fpm-alpine3.16 as php82
 LABEL author="0x49"
 LABEL email="1458513@qq.com"
@@ -76,6 +77,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
         vips-dev \
         yaml-dev \
         zlib-dev \
+        ttf-dejavu ttf-droid ttf-freefont ttf-liberation \
     && ln -s /usr/lib /usr/local/lib64 \
     && if [ -f /usr/local/etc/php/conf.d/docker-php-ext-ffi.ini ]; then \
         echo "ffi.enable = 1" >> /usr/local/etc/php/conf.d/docker-php-ext-ffi.ini; \
@@ -91,5 +93,14 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     && pecl install xlswriter \
     && docker-php-ext-enable xlswriter \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN apk del --update make g++
+RUN rm -rf /var/cache/apk/* && rm -rf /tmp/*
+COPY --from=wkhtmltopdf /bin/wkhtmltopdf /bin/wkhtmltopdf
+COPY --from=wkhtmltopdf /bin/wkhtmltoimage /bin/wkhtmltoimage
+COPY --from=wkhtmltopdf /bin/libwkhtmltox* /bin/
+COPY ./font/STFANGSO.TTF /usr/share/fonts/STFANGSO.TTF
+COPY ./font/simfang.ttf /usr/share/fonts/simfang.ttf
+COPY ./font/simhei.ttf /usr/share/fonts/simhei.ttf
+COPY ./font/simsun.ttc /usr/share/fonts/simsun.ttc
 EXPOSE 9000
 CMD [ "php-fpm","-R" ]
